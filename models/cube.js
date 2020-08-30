@@ -9,7 +9,7 @@ class Cube {
         this.name = name || 'no name';
         this.description = description;
         this.imageUrl = imageUrl || 'img';
-        this.difficulty = difficulty || 0;
+        this.difficulty = difficulty || 1;
     };
     save(){
         const newCube = {
@@ -25,7 +25,6 @@ class Cube {
                 throw err;
             }
             const cubes = JSON.parse(dbData);
-            console.log(cubes);
             cubes.push(newCube);
 
             fs.writeFile(databaseFile, JSON.stringify(cubes), error => {
