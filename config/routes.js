@@ -1,12 +1,13 @@
 // TODO: Require Controllers...
 const express = require('express');
 const Cube = require('../models/cube');
-const {createCube} = require('../controllers/createCube');
+const { createCube, getAllCubes, getOne } = require('../controllers/CRUD-cube');
 
 module.exports = (app) => {
 	app.get('/', (req, res) => {
 		res.render('index', {
-			"title": 'Home | Cubicle'
+			"title": 'Home | Cubicle',
+			cubes: getAllCubes()
 		});
 	});
 	app.post('/create', (req, res) => {
@@ -16,7 +17,7 @@ module.exports = (app) => {
 			imageUrl,
 			difficultyLevel,
 		} = req.body;
-		if(!name){
+		if (!name) {
 			alert('Name Field is neccessary!');
 		};
 		createCube({
@@ -37,10 +38,11 @@ module.exports = (app) => {
 			"title": 'Create | Cubicle'
 		});
 	});
-	app.get('/details:id', (req, res) => {
+	app.get('/details/:id', (req, res) => {
+		const currentCube = getOne(req.params.id)[0];
 		res.render('details', {
-			"title": 'Details | Cubicle'
-			//add id
+			"title": 'Details | Cubicle',
+			currentCube
 		});
 	});
 	app.use('*', (req, res) => {
