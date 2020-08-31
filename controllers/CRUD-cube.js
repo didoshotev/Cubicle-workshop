@@ -1,8 +1,5 @@
 const Cube = require('../models/cube');
-const fs = require('fs');
-const path = require('path');
-const databaseFile = path.join(__dirname, '..', 'config/database.json');
-
+const FSpackage = require('./FSpackage');
 
 const createCube = (data) => {
     const { name, description, imageUrl, difficultyLevel } = data;
@@ -11,13 +8,11 @@ const createCube = (data) => {
 };
 
 const getAllCubes = () => {
-        const cubes = fs.readFileSync(databaseFile);
-        return JSON.parse(cubes);
+        return FSpackage.readAll()
 };
 
 const getOne = (id) => {
-    return JSON.parse(fs.readFileSync(databaseFile))
-    .filter(x => x.id === id);  
+    return FSpackage.readOne(id);
 };
 
 module.exports = {

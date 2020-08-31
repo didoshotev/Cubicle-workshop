@@ -1,7 +1,5 @@
 const { v4: uuidv4, v4 } = require('uuid');
-const fs = require('fs');
-const path = require('path');
-const databaseFile = path.join(__dirname, '..', 'config/database.json');
+const FSpackage = require('../controllers/FSpackage');
 
 class Cube {
     constructor(name, description, imageUrl, difficulty){
@@ -11,29 +9,17 @@ class Cube {
         this.imageUrl = imageUrl || 'img';
         this.difficulty = difficulty || 1;
     };
-    save(){
-        const newCube = {
+    get cube(){
+        return {
             id: this.id,
             name: this.name,
             description: this.description,
             imageUrl: this.imageUrl,
             difficulty: this.difficulty,
         };
-
-        fs.readFile(databaseFile, (err, dbData) => {
-            if(err){
-                throw err;
-            }
-            const cubes = JSON.parse(dbData);
-            cubes.push(newCube);
-
-            fs.writeFile(databaseFile, JSON.stringify(cubes), error => {
-                if (error) {
-                    throw error;
-                };
-                console.log('New Cube is successfully added!');
-            });
-        });
+    };
+    save(){
+        FSpackage.write(this.cube);
     };
 };
 
