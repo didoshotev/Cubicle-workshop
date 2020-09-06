@@ -1,18 +1,18 @@
 const Cube = require('../models/cube');
-const FSpackage = require('./FSpackage');
+const mongoosePackage = require('./mongoosePackage');
 
 const createCube = (data) => {
     const { name, description, imageUrl, difficultyLevel } = data;
-    const newCube = new Cube(name, description, imageUrl, difficultyLevel);
+    const newCube = new Cube({name, description, imageUrl, difficulty:difficultyLevel});
     newCube.save();
 };
 
-const getAllCubes = () => {
-        return FSpackage.readAll()
+const getAllCubes = async () => {
+    return await mongoosePackage.getAllCubes()
 };
 
-const getOne = (id) => {
-    return FSpackage.readOne(id);
+const getOne = async (id) => {
+    return await mongoosePackage.getOneCube(id);
 };
 
 module.exports = {

@@ -1,12 +1,11 @@
-const express = require('express');
-const Cube = require('../models/cube');
 const { createCube, getAllCubes, getOne } = require('../controllers/CRUD-cube');
 
 module.exports = (app) => {
-	app.get('/', (req, res) => {
+	app.get('/', async (req, res) => {
+		const cubes = await getAllCubes();
 		res.render('index', {
 			"title": 'Home | Cubicle',
-			cubes: getAllCubes()
+			cubes
 		});
 	});
 	app.post('/create', (req, res) => {
@@ -18,6 +17,7 @@ module.exports = (app) => {
 		} = req.body;
 		if (!name) {
 			alert('Name Field is neccessary!');
+			return
 		};
 		createCube({
 			name,
@@ -42,11 +42,11 @@ module.exports = (app) => {
 			"title": 'Create Accessory | Cubicle'
 		})
 	});
-	app.get('/details/:id', (req, res) => {
-		const currentCube = getOne(req.params.id)[0];
+	app.get('/details/:id', async (req, res) => {
+		const currentCube = await getOne(req.params.id);
 		res.render('details', {
 			"title": 'Details | Cubicle',
-			currentCube
+			...currentCube
 		});
 	});
 	app.use('*', (req, res) => {
