@@ -37,6 +37,11 @@ module.exports = (app) => {
 			"title": 'Create | Cubicle'
 		});
 	});
+	app.get('/create/accessory', (req, res) => {
+		res.render('createAccessory', {
+			"title": 'Create Accessory | Cubicle'
+		})
+	});
 	app.get('/details/:id', (req, res) => {
 		const currentCube = getOne(req.params.id)[0];
 		res.render('details', {
