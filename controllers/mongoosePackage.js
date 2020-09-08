@@ -1,22 +1,31 @@
-const Cube = require('../models/cube');
-
 const mongodbPackage = {
-    write: async function(newCube){
-        new Cube(newCube).save((err) => {
-            if (err){
+    write: async function (newItem, theClass) {
+        new theClass(newItem).save((err) => {
+            if (err) {
                 console.error('Error!!', err);
                 return;
             };
             console.log('Successfully stored!');
         });
     },
-    getAllCubes: async function(){
-        const cubes = await Cube.find().lean()
-        return cubes;
+    getAllItems: async function (theClass) {
+        const items = await theClass.find().lean()
+        return items;
     },
-    getOneCube: async function(id){
-        const cube = await Cube.findById(id).lean();
-        return cube
+    getOneItem: async function (id, theClass) {
+        const item = await theClass.findById(id).lean();
+        return item
+    },
+    pushToArray: async function (id, theClass, accessoryId) {
+        await theClass.findByIdAndUpdate(id, {
+            $addToSet: {
+                accessories: [accessoryId]
+            }
+        }
+        )
+    },
+    getItemPopulate: async function (id, theClass, arr) {
+       return await theClass.findById(id).populate(arr).lean()
     }
 };
 
