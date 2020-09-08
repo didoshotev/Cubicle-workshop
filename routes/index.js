@@ -1,4 +1,5 @@
-const { createCube, getAllCubes, getOne } = require('../controllers/CRUD-cube');
+const { createCube, getAllCubes, getOneCube, pushAccessory, getCubeAndAccessory } = require('../controllers/CRUD-cube');
+const { createAccessory, getAllAccessories, getOneAccessory } = require('../controllers/CRUD-accessory');
 
 module.exports = (app) => {
 	app.get('/', async (req, res) => {
@@ -27,11 +28,6 @@ module.exports = (app) => {
 		});
 		res.redirect('/');
 	});
-	app.get('/about', (req, res) => {
-		res.render('about', {
-			"title": 'About | Cubicle'
-		});
-	});
 	app.get('/create', (req, res) => {
 		res.render('create', {
 			"title": 'Create | Cubicle'
@@ -42,11 +38,48 @@ module.exports = (app) => {
 			"title": 'Create Accessory | Cubicle'
 		})
 	});
+	app.post('/create/accessory', (req, res) => {
+		const {
+			name,
+			description,
+			imageUrl
+		} = req.body
+		if (!name || !description || !imageUrl) {
+			console.error('Fields must be filled!');
+			return
+		};
+		createAccessory({
+			name,
+			description,
+			imageUrl
+		});
+		res.redirect('/');
+	});
+	app.get('/attach/accessory/:id', async (req, res) => {
+		const currentCube = await getOneCube(req.params.id);
+		const accessories = await getAllAccessories();
+		res.render('attachAccessory', {
+			"title": 'Attach Accessory | Cubicle',
+			...currentCube,
+			accessories
+		})
+	});
+	app.post('/attach/accessory/:id', async (req, res) => {
+		const cubeId = req.params.id;
+		const selectedAccessoryId = req.body.accessory;
+		await pushAccessory(cubeId, selectedAccessoryId);
+		res.redirect('/');
+	});
 	app.get('/details/:id', async (req, res) => {
-		const currentCube = await getOne(req.params.id);
+		const cube = await getCubeAndAccessory(req.params.id);
 		res.render('details', {
 			"title": 'Details | Cubicle',
-			...currentCube
+			cube
+		});
+	});
+	app.get('/about', (req, res) => {
+		res.render('about', {
+			"title": 'About | Cubicle'
 		});
 	});
 	app.use('*', (req, res) => {

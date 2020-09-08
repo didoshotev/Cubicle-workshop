@@ -8,17 +8,27 @@ const createCube = (data) => {
 };
 
 const getAllCubes = async () => {
-    return await mongoosePackage.getAllCubes()
+    return await mongoosePackage.getAllItems(Cube)
 };
 
-const getOne = async (id) => {
-    return await mongoosePackage.getOneCube(id);
+const getOneCube = async (id) => {
+    return await mongoosePackage.getOneItem(id, Cube);
 };
+
+const pushAccessory = async (id, itemId) => {
+    return await mongoosePackage.pushToArray(id, Cube, itemId);
+};
+
+const getCubeAndAccessory = async(id) => {
+    return await mongoosePackage.getItemPopulate(id, Cube, 'accessories')
+}
 
 module.exports = {
     createCube,
     getAllCubes,
-    getOne,
+    getOneCube,
+    pushAccessory,
+    getCubeAndAccessory
 }
 
 

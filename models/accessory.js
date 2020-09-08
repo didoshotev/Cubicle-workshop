@@ -15,7 +15,7 @@ const AccessorySchema = new mongoose.Schema({
         required: true,
     },
     accessories: [{
-        type: ObjectId,
+        type: 'ObjectId',
         ref: 'Cube'
     }]
 });
