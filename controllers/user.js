@@ -3,9 +3,14 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const privateKey = 'DEFFECT'
 
+const generateToken = (data) => {
+    const token = jwt.sign(data, privateKey);
+    return token;
+};
+
+
 const saveUser = async (req, res) => {
     let { username, password } = req.body;
-
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
@@ -13,18 +18,32 @@ const saveUser = async (req, res) => {
         username,
         password: hashedPassword
     });
-
     const userObject = await user.save();
 
-    const token = jwt.sign({
-        username: userObject.username,
+    const token = generateToken({
         userID: userObject._id,
-    }, privateKey);
-
+        username: userObject.username,
+    });
     res.cookie('aid', token);
+
     return true
 };
+const verifyUser = async (req, res) => {
+    const { username, password } = req.body;
 
+    const userObject = await User.findOne({ username })
+    const status = await bcrypt.compare(password, userObject.password)
+    if (status) {
+        const token = generateToken({
+            userID: userObject._id,
+            username: userObject.username,
+        })
+        res.cookie('aid', token);
+    };
+
+    return status
+}
 module.exports = {
     saveUser,
+    verifyUser
 };
