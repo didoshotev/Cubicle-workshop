@@ -1,4 +1,3 @@
-const User = require('../models/user');
 const userController = require('../controllers/user');
 const { verifyUser } = require('../controllers/user');
 
@@ -19,7 +18,6 @@ module.exports = (app) => {
         if(status === true){
             res.redirect('/')
         }
-       
     })
 
     app.post('/login', async (req, res) => {
@@ -31,7 +29,8 @@ module.exports = (app) => {
        }
     })
 
-    // app.post('/logout', async (req, res) => {
-
-    // });
+    app.get('/logout', (req, res) => {
+        res.clearCookie('aid', '');
+        res.redirect('/');
+    });
 };
