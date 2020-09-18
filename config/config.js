@@ -1,8 +1,8 @@
 module.exports = {
     development: {
-        port: process.env.PORT || 3000,
-        databaseUrl: `mongodb+srv://test123:test123123@cluster0.a7hhx.mongodb.net/Cubicle-workshop?retryWrites=true&w=majority`,
-        privateKey: 'DEFFECT'
+        port: process.env.PORT,
+        databaseUrl: process.env.DATABASE_URL,
+        privateKey: process.env.PRIVATE_KEY
     },
     production: {}
 }

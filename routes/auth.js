@@ -1,13 +1,13 @@
 const User = require('../models/user');
 const userController = require('../controllers/user');
-const { verifyUser} = require('../controllers/user');
+const { verifyUser } = require('../controllers/user');
 
 module.exports = (app) => {
     app.get('/login', (req, res) => {
         res.render('loginPage', {
             "title": 'Login | Cubicle',
         })
-    });
+    })
     app.get('/register', (req, res) => {
         res.render('registerPage', {
             "title": 'Register | Cubicle',
@@ -26,6 +26,12 @@ module.exports = (app) => {
        const result = await verifyUser(req, res);
        if ( result ){ 
         res.redirect('/')
+       } else {
+           res.redirect('/login');
        }
     })
+
+    // app.post('/logout', async (req, res) => {
+
+    // });
 };
