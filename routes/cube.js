@@ -1,11 +1,12 @@
 const env = process.env.NODE_ENV || 'development';
 
 const { createCube, getCubeAndAccessory } = require('../controllers/CRUD-cube');
+const { authAccess, getUserStatus } = require('../controllers/user');
 const jwt = require('jsonwebtoken');
 const config = require('../config/config')[env];
 
 module.exports = (app) => {
-    app.post('/create', (req, res) => {
+    app.post('/create', authAccess, (req, res) => {
 		const {
 			name,
 			description,
@@ -29,15 +30,17 @@ module.exports = (app) => {
 		res.redirect('/');
     });
     
-	app.get('/create', (req, res) => {
+	app.get('/create', authAccess, getUserStatus, (req, res) => {
 		res.render('create', {
-			"title": 'Create | Cubicle'
+			"title": 'Create | Cubicle',
+			isLoggedIn: req.isLoggedIn
 		});
 	});
 
-    app.get('/edit', (req, res) => {
+    app.get('/edit', authAccess, getUserStatus, (req, res) => {
         res.render('editCubePage', {
-            'title': 'Cubicle | Edit'
+			'title': 'Cubicle | Edit',
+			isLoggedIn: req.isLoggedIn
         })
     })
 
@@ -49,9 +52,10 @@ module.exports = (app) => {
 		});
 	});
 
-    app.get('/delete', (req, res) => {
+    app.get('/delete', authAccess, getUserStatus, (req, res) => {
         res.render('deleteCubePage', {
-            'title': 'Cubicle | Delete'
+			'title': 'Cubicle | Delete',
+			isLoggedIn: req.isLoggedIn
         })
     })
 };
