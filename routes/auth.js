@@ -1,6 +1,6 @@
 const User = require('../models/user');
 const userController = require('../controllers/user');
-const { static } = require('express');
+const { verifyUser} = require('../controllers/user');
 
 module.exports = (app) => {
     app.get('/login', (req, res) => {
@@ -20,5 +20,12 @@ module.exports = (app) => {
             res.redirect('/')
         }
        
+    })
+
+    app.post('/login', async (req, res) => {
+       const result = await verifyUser(req, res);
+       if ( result ){ 
+        res.redirect('/')
+       }
     })
 };
