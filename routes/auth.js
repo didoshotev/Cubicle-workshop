@@ -30,8 +30,8 @@ module.exports = (app) => {
            res.redirect('/login');
        }
     })
-
-    // app.post('/logout', async (req, res) => {
-
-    // });
+    app.get('/logout', (req, res) => {
+        res.clearCookie('aid');
+        res.redirect('/');
+       });
 };
