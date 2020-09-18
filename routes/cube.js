@@ -1,5 +1,8 @@
-const { createCube, getCubeAndAccessory } = require('../controllers/CRUD-cube');
+const env = process.env.NODE_ENV || 'development';
 
+const { createCube, getCubeAndAccessory } = require('../controllers/CRUD-cube');
+const jwt = require('jsonwebtoken');
+const config = require('../config/config')[env];
 
 module.exports = (app) => {
     app.post('/create', (req, res) => {
@@ -13,11 +16,15 @@ module.exports = (app) => {
 			alert('Name Field is neccessary!');
 			return
 		};
+		const token = req.cookies['aid'];
+		const decodedObject = jwt.verify(token, config.privateKey)
+
 		createCube({
 			name,
 			description,
 			imageUrl,
 			difficultyLevel,
+			decodedObject
 		});
 		res.redirect('/');
     });

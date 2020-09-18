@@ -2,8 +2,8 @@ const Cube = require('../models/cube');
 const mongoosePackage = require('./mongoosePackage');
 
 const createCube = (data) => {
-    const { name, description, imageUrl, difficultyLevel } = data;
-    const newCube = new Cube({name, description, imageUrl, difficulty:difficultyLevel});
+    const { name, description, imageUrl, difficultyLevel, decodedObject } = data;
+    const newCube = new Cube({name, description, imageUrl, difficulty:difficultyLevel, creatorID: decodedObject.userID});
     newCube.save();
 };
 
