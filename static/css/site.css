@@ -78,12 +78,12 @@ div.cube {
 
 div.cube:hover p.name {
     background: #607588;
-    color: white;
+    color: #fff;
 }
 
 p.name {
     text-align: center;
-    font-size: 20px;
+    font-size: 25px;
     font-weight: bolder;
     text-transform: uppercase;
     padding: 10px;
@@ -93,7 +93,7 @@ p.name {
 
 button, main a.btn {
     border: none;
-    padding: 8px;
+    padding: 10px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
@@ -103,6 +103,7 @@ button, main a.btn {
     border-radius: 4px;
     background: #607588;
     color: white;
+    border-radius: 11px;
 }
 
 .details a.btn{
@@ -116,7 +117,13 @@ button:hover {
 }
 
 a.btn:hover{
-    text-decoration: underline;
+    background-color: black;
+    transform: translateY(-2px);
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.5);
+}
+
+a.btn:active {
+    transform: translateY(-1px);
 }
 
 a {
