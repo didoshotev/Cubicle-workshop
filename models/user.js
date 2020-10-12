@@ -4,13 +4,14 @@ const UserSchema = new mongoose.Schema({
     username: {
         type: String,
         required: true,
-        trim: true
+        trim: true,
+        unique: true,
+        match: [/^[A-Za-z0-9]+$/, 'Username is not valid'],
     },
     password: {
         type: String,
         required: true,
-        minlength: 3,
-        trim: true 
+        trim: true,
     },
 
 });

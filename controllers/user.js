@@ -11,7 +11,6 @@ const generateToken = (data) => {
     return token;
 };
 
-
 const saveUser = async (req, res) => {
     let { username, password } = req.body;
     const salt = await bcrypt.genSalt(10);
@@ -32,20 +31,34 @@ const saveUser = async (req, res) => {
 };
 const verifyUser = async (req, res) => {
     const { username, password } = req.body;
-    const userObject = await User.findOne({ username })
-    if(!userObject) {
-        return false
-    }
-    const status = await bcrypt.compare(password, userObject.password)
-    if (status) {
-        const token = generateToken({
-            userID: userObject._id,
-            username: userObject.username,
-        })
-        res.cookie('aid', token);
+    try {
+        const userObject = await User.findOne({ username })
+        if (!userObject) {
+            return {
+                error: true,
+                message: 'There is no such user'
+            }
+        }
+        const status = await bcrypt.compare(password, userObject.password)
+        if (status) {
+            const token = generateToken({
+                userID: userObject._id,
+                username: userObject.username,
+            })
+            res.cookie('aid', token);
+        }
+        return {
+            error: !status,
+            message: status || 'Wrong password'
+        }
+    } catch (err) {
+        return {
+            error: true,
+            message: 'There is no such user',
+            status
+        }
     }
 
-    return status
 };
 
 const authAccess = (req, res, next) => {
@@ -55,7 +68,7 @@ const authAccess = (req, res, next) => {
     }
 
     try {
-        const decodedObject = jwt.verify(token, config.privateKey);
+        jwt.verify(token, config.privateKey);
         next()
     } catch (err) {
         res.redirect('/');
@@ -95,10 +108,18 @@ const authAccessJSON = (req, res, next) => {
     };
 }
 
+const guestAccess = (req, res, next) => {
+    const token = req.cookies['aid'];
+    if (token) {
+        return res.redirect('/')
+    }
+    next();
+};
 module.exports = {
     saveUser,
-    verifyUser,
     authAccess,
+    verifyUser,
     getUserStatus,
-    authAccessJSON
+    authAccessJSON,
+    guestAccess
 };
